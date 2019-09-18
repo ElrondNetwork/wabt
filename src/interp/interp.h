@@ -589,6 +589,9 @@ class Thread {
 
   Result CallHost(HostFunc*);
 
+	bool gasMeteringEnabled = false;
+	int64_t remainingGas = 0;
+
  private:
   const uint8_t* GetIstream() const { return env_->istream_->data.data(); }
 
@@ -703,6 +706,10 @@ class Executor {
   ExecResult RunExportByName(Module* module,
                              string_view name,
                              const TypedValues& args);
+
+	void SetGasMeteringSwitch(bool enableMetering);
+	void SetRemainingGas(int64_t amount);
+	int64_t GetRemainingGas();
 
  private:
   Result RunDefinedFunction(IstreamOffset function_offset);

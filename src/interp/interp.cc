@@ -1693,6 +1693,13 @@ Result Thread::Run(int num_instructions) {
   const uint8_t* pc = &istream[pc_];
   for (int i = 0; i < num_instructions; ++i) {
     Opcode opcode = ReadOpcode(&pc);
+
+		if (gasMeteringEnabled) {
+			// TODO: Deduct Gas according to a GasSchedule, based on the
+			// opcode. For now, each opcode will cost 1 unit of Gas.
+			remainingGas--;
+		}
+
     assert(!opcode.IsInvalid());
     switch (opcode) {
       case Opcode::Select: {
@@ -3542,6 +3549,18 @@ Executor::Executor(Environment* env,
                    Stream* trace_stream,
                    const Thread::Options& options)
     : env_(env), trace_stream_(trace_stream), thread_(env, options) {}
+
+Executor::SetGasMeteringSwitch(bool enableMetering) {
+	thread_.gasMeteringEnabled = enableMetering;
+}
+
+Executor::SetRemainingGas(int64_t amount) {
+	thread_.remainingGas = amount
+}
+
+Executor::GetRemainingGas() {
+	return thread_.remainingGas;
+}
 
 ExecResult Executor::RunFunction(Index func_index, const TypedValues& args) {
   ExecResult exec_result;
