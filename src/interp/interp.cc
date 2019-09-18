@@ -3550,15 +3550,15 @@ Executor::Executor(Environment* env,
                    const Thread::Options& options)
     : env_(env), trace_stream_(trace_stream), thread_(env, options) {}
 
-Executor::SetGasMeteringSwitch(bool enableMetering) {
+void Executor::SetGasMeteringSwitch(bool enableMetering) {
 	thread_.gasMeteringEnabled = enableMetering;
 }
 
-Executor::SetRemainingGas(int64_t amount) {
-	thread_.remainingGas = amount
+void Executor::SetRemainingGas(int64_t amount) {
+	thread_.remainingGas = amount;
 }
 
-Executor::GetRemainingGas() {
+int64_t Executor::GetRemainingGas() {
 	return thread_.remainingGas;
 }
 
