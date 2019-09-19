@@ -23,7 +23,9 @@
 #include <limits>
 #include <type_traits>
 #include <vector>
+
 #include <iostream>
+#include <iomanip>
 
 #include "src/interp/interp-internal.h"
 
@@ -1700,9 +1702,9 @@ Result Thread::Run(int num_instructions) {
 			// opcode. For now, each opcode will cost 1 unit of Gas.
 			uint16_t gasToConsume = GasSchedule[opcode];
 			remainingGas -= gasToConsume;
-			std::cout << opcode << "\t" << opcode.GetName();
-			std::cout << "\t" << gasToConsume;
-			std::cout << "\t" << remainingGas << "\n";
+			std::cout << opcode << "\t" << std::setw(12) << opcode.GetName();
+			std::cout << std::setw(6) << gasToConsume;
+			std::cout << std::setw(6) << remainingGas << "\n";
 		}
 
     assert(!opcode.IsInvalid());
