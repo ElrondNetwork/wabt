@@ -48,6 +48,8 @@ struct Opcode {
 #include "src/opcode.def"
 #undef WABT_OPCODE
 
+	const static uint32_t OPCODE_COUNT = Invalid + 1;
+
   Opcode() = default;  // Provided so Opcode can be member of a union.
   Opcode(Enum e) : enum_(e) {}
   operator Enum() const { return enum_; }

@@ -24,6 +24,9 @@
 #include <type_traits>
 #include <vector>
 
+#include <iostream>
+#include <iomanip>
+
 #include "src/interp/interp-internal.h"
 
 #include "src/cast.h"
@@ -1693,6 +1696,15 @@ Result Thread::Run(int num_instructions) {
   const uint8_t* pc = &istream[pc_];
   for (int i = 0; i < num_instructions; ++i) {
     Opcode opcode = ReadOpcode(&pc);
+
+		if (gasMeteringEnabled) {
+			uint16_t gasToConsume = GasCostsTable[opcode];
+			remainingGas -= gasToConsume;
+			std::cout << opcode << "\t" << std::setw(12) << opcode.GetName();
+			std::cout << std::setw(6) << gasToConsume;
+			std::cout << std::setw(6) << remainingGas << "\n";
+		}
+
     assert(!opcode.IsInvalid());
     switch (opcode) {
       case Opcode::Select: {
@@ -3542,6 +3554,35 @@ Executor::Executor(Environment* env,
                    Stream* trace_stream,
                    const Thread::Options& options)
     : env_(env), trace_stream_(trace_stream), thread_(env, options) {}
+
+void Executor::SetGasMeteringSwitch(bool enableMetering) {
+	thread_.gasMeteringEnabled = enableMetering;
+}
+
+void Executor::SetRemainingGas(int64_t amount) {
+	thread_.remainingGas = amount;
+}
+
+int64_t Executor::GetRemainingGas() {
+	return thread_.remainingGas;
+}
+
+void Executor::SetGasCostsTable(uint16_t *gasCostsTable) {
+	thread_.GasCostsTable = gasCostsTable;
+}
+
+void Executor::SetGasCostForOpcode(uint32_t index, uint16_t cost) {
+	Opcode::Enum opcodeIndex = Opcode::Enum(index);
+	thread_.GasCostsTable[opcodeIndex] = cost;
+}
+
+void Executor::InitGasCosts(uint16_t default_cost) {
+	thread_.GasCostsTable = new uint16_t[Opcode::OPCODE_COUNT];
+	for (uint32_t index = 0; index < Opcode::OPCODE_COUNT; index++) {
+		Opcode::Enum opcodeIndex = Opcode::Enum(index);
+		thread_.GasCostsTable[opcodeIndex] = default_cost;
+	}
+}
 
 ExecResult Executor::RunFunction(Index func_index, const TypedValues& args) {
   ExecResult exec_result;
