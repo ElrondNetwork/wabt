@@ -712,7 +712,7 @@ class Executor {
 	void SetRemainingGas(int64_t amount);
 	int64_t GetRemainingGas();
 	void InitGasCosts(uint16_t default_cost);
-	void SetGasCostsForOpcode(uint32_t code, uint16_t cost);
+	void SetGasCostForOpcode(uint32_t code, uint16_t cost);
 	void SetGasCostsTable(uint16_t *gasCostsTable);
 
  private:
