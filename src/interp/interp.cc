@@ -1698,8 +1698,11 @@ Result Thread::Run(int num_instructions) {
 		if (gasMeteringEnabled) {
 			// TODO: Deduct Gas according to a GasSchedule, based on the
 			// opcode. For now, each opcode will cost 1 unit of Gas.
-			remainingGas--;
-			std::cout << opcode << "\t" << opcode.GetName() << "\n";
+			uint16_t gasToConsume = GasSchedule[opcode];
+			remainingGas -= gasToConsume;
+			std::cout << opcode << "\t" << opcode.GetName();
+			std::cout << "\t" << gasToConsume;
+			std::cout << "\t" << remainingGas << "\n";
 		}
 
     assert(!opcode.IsInvalid());
@@ -3562,6 +3565,18 @@ void Executor::SetRemainingGas(int64_t amount) {
 
 int64_t Executor::GetRemainingGas() {
 	return thread_.remainingGas;
+}
+
+void Executor::SetGasCostForOpcode(uint32_t index, uint32_t cost) {
+	Opcode::Enum opcodeIndex = Opcode::Enum(index);
+	thread_.GasSchedule[opcodeIndex] = cost;
+}
+
+void Executor::InitGasCosts(uint32_t default_cost) {
+	for (uint32_t index = 0; index < Opcode::OPCODE_COUNT; index++) {
+		Opcode::Enum opcodeIndex = Opcode::Enum(index);
+		thread_.GasSchedule[opcodeIndex] = default_cost;
+	}
 }
 
 ExecResult Executor::RunFunction(Index func_index, const TypedValues& args) {
