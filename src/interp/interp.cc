@@ -1700,7 +1700,7 @@ Result Thread::Run(int num_instructions) {
 		if (gasMeteringEnabled) {
 			// TODO: Deduct Gas according to a GasSchedule, based on the
 			// opcode. For now, each opcode will cost 1 unit of Gas.
-			uint16_t gasToConsume = GasSchedule[opcode];
+			uint16_t gasToConsume = GasCostsTable[opcode];
 			remainingGas -= gasToConsume;
 			std::cout << opcode << "\t" << std::setw(12) << opcode.GetName();
 			std::cout << std::setw(6) << gasToConsume;
@@ -3569,12 +3569,15 @@ int64_t Executor::GetRemainingGas() {
 	return thread_.remainingGas;
 }
 
-void Executor::SetGasCostForOpcode(uint32_t index, uint32_t cost) {
+void Executor::SetGasCostsTable(uint16_t *gasCostsTable) {
+	thread_.GasCostsTable = gasCostsTable;
+
+void Executor::SetGasCostForOpcode(uint32_t index, uint16_t cost) {
 	Opcode::Enum opcodeIndex = Opcode::Enum(index);
 	thread_.GasSchedule[opcodeIndex] = cost;
 }
 
-void Executor::InitGasCosts(uint32_t default_cost) {
+void Executor::InitGasCosts(uint16_t default_cost) {
 	for (uint32_t index = 0; index < Opcode::OPCODE_COUNT; index++) {
 		Opcode::Enum opcodeIndex = Opcode::Enum(index);
 		thread_.GasSchedule[opcodeIndex] = default_cost;

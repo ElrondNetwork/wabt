@@ -591,7 +591,7 @@ class Thread {
 
 	bool gasMeteringEnabled = false;
 	int64_t remainingGas = 0;
-	uint16_t GasSchedule[Opcode::OPCODE_COUNT];
+	uint16_t *GasCostsTable;
 
  private:
   const uint8_t* GetIstream() const { return env_->istream_->data.data(); }
@@ -711,8 +711,9 @@ class Executor {
 	void SetGasMeteringSwitch(bool enableMetering);
 	void SetRemainingGas(int64_t amount);
 	int64_t GetRemainingGas();
-	void InitGasCosts(uint32_t default_cost);
-	void SetGasCostForOpcode(uint32_t code, uint32_t cost);
+	void InitGasCosts(uint16_t default_cost);
+	void SetGasCostsForOpcode(uint32_t code, uint16_t cost);
+	void SetGasCostsTable(uint16_t *gasCostsTable);
 
  private:
   Result RunDefinedFunction(IstreamOffset function_offset);
