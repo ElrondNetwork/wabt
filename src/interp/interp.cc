@@ -23,6 +23,7 @@
 #include <limits>
 #include <type_traits>
 #include <vector>
+#include <iostream>
 
 #include "src/interp/interp-internal.h"
 
@@ -1698,6 +1699,7 @@ Result Thread::Run(int num_instructions) {
 			// TODO: Deduct Gas according to a GasSchedule, based on the
 			// opcode. For now, each opcode will cost 1 unit of Gas.
 			remainingGas--;
+			std::cout << opcode;
 		}
 
     assert(!opcode.IsInvalid());
