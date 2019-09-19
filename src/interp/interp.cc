@@ -3577,6 +3577,7 @@ void Executor::SetGasCostForOpcode(uint32_t index, uint16_t cost) {
 }
 
 void Executor::InitGasCosts(uint16_t default_cost) {
+	thread_.GasCostsTable = new uint16_t[Opcode::OPCODE_COUNT];
 	for (uint32_t index = 0; index < Opcode::OPCODE_COUNT; index++) {
 		Opcode::Enum opcodeIndex = Opcode::Enum(index);
 		thread_.GasCostsTable[opcodeIndex] = default_cost;
