@@ -1699,7 +1699,7 @@ Result Thread::Run(int num_instructions) {
 			// TODO: Deduct Gas according to a GasSchedule, based on the
 			// opcode. For now, each opcode will cost 1 unit of Gas.
 			remainingGas--;
-			std::cout << opcode << "\n";
+			std::cout << opcode << "\t" << opcode.GetName() << "\n";
 		}
 
     assert(!opcode.IsInvalid());
