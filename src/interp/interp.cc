@@ -1700,9 +1700,6 @@ Result Thread::Run(int num_instructions) {
 		if (gasMeteringEnabled) {
 			uint16_t gasToConsume = GasCostsTable[opcode];
 			remainingGas -= gasToConsume;
-			std::cout << opcode << "\t" << std::setw(12) << opcode.GetName();
-			std::cout << std::setw(6) << gasToConsume;
-			std::cout << std::setw(6) << remainingGas << "\n";
 		}
 
     assert(!opcode.IsInvalid());
